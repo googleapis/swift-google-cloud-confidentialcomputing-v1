@@ -21,52 +21,44 @@ import Foundation
 import GoogleCloudLocation
 import GoogleCloudWkt
 import GoogleCloudGax
-import struct Logging.Logger
 
 extension Clients {
-  final class ConfidentialComputingLogging: ConfidentialComputingStub {
+  final class ConfidentialComputingRetry: ConfidentialComputingStub {
     let inner: any ConfidentialComputingStub
-    let logger: Logger
+    let options: GoogleCloudGax.ClientOptions
 
-    public init(_ inner: any ConfidentialComputingStub, logger: Logger) {
-      var logger = logger
-      logger[metadataKey: "gcp.artifact.id"] = "google-cloud-confidentialcomputing-v1"
-      logger[metadataKey: "gcp.client.service"] = "confidentialcomputing"
-      logger[metadataKey: "gcp.experimental.swift.client"] = "ConfidentialComputing"
+    public init(_ inner: any ConfidentialComputingStub, options: GoogleCloudGax.ClientOptions) {
       self.inner = inner
-      self.logger = logger
+      self.options = options
     }
 
     func _intercept<Input, Output>(
       request: Input,
       options: GoogleCloudGax.RequestOptions,
-      name: Swift.String,
+      idempotent: Swift.Bool,
       action: (Input, GoogleCloudGax.RequestOptions) async throws -> Output,
     ) async throws -> Output {
-      var logger = logger
-      logger[metadataKey: "gcp.experimental.swift.request.id"] = "\(UUID())"
-      logger[metadataKey: "gcp.experimental.swift.method"] = .string(name)
-      logger.debug("enter  : \(request) \(options)")
-      do {
-        let output = try await action(request, options)
-        logger.debug("success: \(request) \(options) \(output)")
-        return output
-      } catch let error {
-        logger.debug("error  : \(request) \(options) \(error)")
-        throw error
+      let loop = GoogleCloudGax._RetryLoop(
+        options: options, withDefault: self.options, idempotent: idempotent,
+      )
+      let attempt = { (attemptTimeout: Swift.Duration?) async throws -> Output in
+        var attemptOptions = options
+        attemptOptions.attemptTimeout = attemptTimeout
+        return try await action(request, attemptOptions)
       }
+      return try await loop.run(attempt: attempt)
     }
 
     public func createChallenge(
       request: CreateChallengeRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.Challenge {
+    ) async throws -> GoogleCloudConfidentialComputingV1.Challenge {
       try await self._intercept(
         request: request,
         options: options,
-        name: "createChallenge",
+        idempotent: false,
         action: {
           (r: CreateChallengeRequest, o: GoogleCloudGax.RequestOptions) async throws
-            -> GoogleCloudConfidentialcomputingV1.Challenge
+            -> GoogleCloudConfidentialComputingV1.Challenge
           in
           return try await self.inner.createChallenge(request: r, options: o)
         })
@@ -74,14 +66,14 @@ extension Clients {
 
     public func verifyAttestation(
       request: VerifyAttestationRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyAttestationResponse {
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyAttestationResponse {
       try await self._intercept(
         request: request,
         options: options,
-        name: "verifyAttestation",
+        idempotent: false,
         action: {
           (r: VerifyAttestationRequest, o: GoogleCloudGax.RequestOptions) async throws
-            -> GoogleCloudConfidentialcomputingV1.VerifyAttestationResponse
+            -> GoogleCloudConfidentialComputingV1.VerifyAttestationResponse
           in
           return try await self.inner.verifyAttestation(request: r, options: o)
         })
@@ -89,14 +81,14 @@ extension Clients {
 
     public func verifyConfidentialSpace(
       request: VerifyConfidentialSpaceRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialSpaceResponse {
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyConfidentialSpaceResponse {
       try await self._intercept(
         request: request,
         options: options,
-        name: "verifyConfidentialSpace",
+        idempotent: false,
         action: {
           (r: VerifyConfidentialSpaceRequest, o: GoogleCloudGax.RequestOptions) async throws
-            -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialSpaceResponse
+            -> GoogleCloudConfidentialComputingV1.VerifyConfidentialSpaceResponse
           in
           return try await self.inner.verifyConfidentialSpace(request: r, options: o)
         })
@@ -104,14 +96,14 @@ extension Clients {
 
     public func verifyConfidentialGke(
       request: VerifyConfidentialGkeRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialGkeResponse {
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyConfidentialGkeResponse {
       try await self._intercept(
         request: request,
         options: options,
-        name: "verifyConfidentialGke",
+        idempotent: false,
         action: {
           (r: VerifyConfidentialGkeRequest, o: GoogleCloudGax.RequestOptions) async throws
-            -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialGkeResponse
+            -> GoogleCloudConfidentialComputingV1.VerifyConfidentialGkeResponse
           in
           return try await self.inner.verifyConfidentialGke(request: r, options: o)
         })
@@ -123,7 +115,7 @@ extension Clients {
       try await self._intercept(
         request: request,
         options: options,
-        name: "listLocations",
+        idempotent: true,
         action: {
           (r: GoogleCloudLocation.ListLocationsRequest, o: GoogleCloudGax.RequestOptions)
             async throws -> GoogleCloudLocation.ListLocationsResponse
@@ -138,7 +130,7 @@ extension Clients {
       try await self._intercept(
         request: request,
         options: options,
-        name: "getLocation",
+        idempotent: true,
         action: {
           (r: GoogleCloudLocation.GetLocationRequest, o: GoogleCloudGax.RequestOptions) async throws
             -> GoogleCloudLocation.Location

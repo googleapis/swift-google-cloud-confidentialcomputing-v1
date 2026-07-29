@@ -26,19 +26,19 @@ extension Clients {
   protocol ConfidentialComputingStub {
     func createChallenge(
       request: CreateChallengeRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.Challenge
+    ) async throws -> GoogleCloudConfidentialComputingV1.Challenge
 
     func verifyAttestation(
       request: VerifyAttestationRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyAttestationResponse
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyAttestationResponse
 
     func verifyConfidentialSpace(
       request: VerifyConfidentialSpaceRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialSpaceResponse
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyConfidentialSpaceResponse
 
     func verifyConfidentialGke(
       request: VerifyConfidentialGkeRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialGkeResponse
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyConfidentialGkeResponse
 
     func listLocations(
       request: GoogleCloudLocation.ListLocationsRequest, options: GoogleCloudGax.RequestOptions
@@ -59,7 +59,7 @@ extension Clients {
 
     public func createChallenge(
       request: CreateChallengeRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.Challenge {
+    ) async throws -> GoogleCloudConfidentialComputingV1.Challenge {
       let path = try { () throws -> Swift.String in
         guard let pathVariable0 = request.parent as Swift.String?, !pathVariable0.isEmpty else {
           throw GoogleCloudGax.RequestError.binding("'request.parent' is not set or is empty")
@@ -78,12 +78,12 @@ extension Clients {
       }
       let (data, _) = try await self.inner.rpc(for: req).get()
       return try GoogleCloudWkt._ProtoJSONDecoder().decode(
-        GoogleCloudConfidentialcomputingV1.Challenge.self, from: data)
+        GoogleCloudConfidentialComputingV1.Challenge.self, from: data)
     }
 
     public func verifyAttestation(
       request: VerifyAttestationRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyAttestationResponse {
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyAttestationResponse {
       let path = try { () throws -> Swift.String in
         guard let pathVariable0 = request.challenge as Swift.String?, !pathVariable0.isEmpty else {
           throw GoogleCloudGax.RequestError.binding("'request.challenge' is not set or is empty")
@@ -100,12 +100,12 @@ extension Clients {
       req.httpBody = try JSONEncoder().encode(request)
       let (data, _) = try await self.inner.rpc(for: req).get()
       return try GoogleCloudWkt._ProtoJSONDecoder().decode(
-        GoogleCloudConfidentialcomputingV1.VerifyAttestationResponse.self, from: data)
+        GoogleCloudConfidentialComputingV1.VerifyAttestationResponse.self, from: data)
     }
 
     public func verifyConfidentialSpace(
       request: VerifyConfidentialSpaceRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialSpaceResponse {
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyConfidentialSpaceResponse {
       let path = try { () throws -> Swift.String in
         guard let pathVariable0 = request.challenge as Swift.String?, !pathVariable0.isEmpty else {
           throw GoogleCloudGax.RequestError.binding("'request.challenge' is not set or is empty")
@@ -122,12 +122,12 @@ extension Clients {
       req.httpBody = try JSONEncoder().encode(request)
       let (data, _) = try await self.inner.rpc(for: req).get()
       return try GoogleCloudWkt._ProtoJSONDecoder().decode(
-        GoogleCloudConfidentialcomputingV1.VerifyConfidentialSpaceResponse.self, from: data)
+        GoogleCloudConfidentialComputingV1.VerifyConfidentialSpaceResponse.self, from: data)
     }
 
     public func verifyConfidentialGke(
       request: VerifyConfidentialGkeRequest, options: GoogleCloudGax.RequestOptions
-    ) async throws -> GoogleCloudConfidentialcomputingV1.VerifyConfidentialGkeResponse {
+    ) async throws -> GoogleCloudConfidentialComputingV1.VerifyConfidentialGkeResponse {
       let path = try { () throws -> Swift.String in
         guard let pathVariable0 = request.challenge as Swift.String?, !pathVariable0.isEmpty else {
           throw GoogleCloudGax.RequestError.binding("'request.challenge' is not set or is empty")
@@ -144,7 +144,7 @@ extension Clients {
       req.httpBody = try JSONEncoder().encode(request)
       let (data, _) = try await self.inner.rpc(for: req).get()
       return try GoogleCloudWkt._ProtoJSONDecoder().decode(
-        GoogleCloudConfidentialcomputingV1.VerifyConfidentialGkeResponse.self, from: data)
+        GoogleCloudConfidentialComputingV1.VerifyConfidentialGkeResponse.self, from: data)
     }
 
     public func listLocations(
